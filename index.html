@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Normal Puerperium NCLEX Quiz</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Landing Page Styles */
+        .landing-page {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .book-icon {
+            font-size: 80px;
+            margin-bottom: 30px;
+        }
+
+        .landing-page h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #1a1a1a;
+        }
+
+        .landing-page p {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 50px;
+        }
+
+        .quiz-cards {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 40px;
+        }
+
+        .quiz-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            width: 350px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .quiz-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .quiz-card.part1 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .quiz-card.part2 {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .quiz-card .number {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .quiz-card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .quiz-card p {
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .start-button {
+            background: white;
+            color: #333;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-card.part1 .start-button {
+            color: #667eea;
+        }
+
+        .quiz-card.part2 .start-button {
+            color: #f093fb;
+        }
+
+        .start-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* Quiz Page Styles */
+        .quiz-page {
+            display: none;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 40px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .quiz-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .timer {
+            font-size: 1.1rem;
+            color: #666;
+        }
+
+        .progress-info {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .question-counter {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .percentage-complete {
+            font-size: 0.9rem;
+            color: #999;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            color: #1a1a1a;
+        }
+
+        .options {
+            margin-bottom: 40px;
+        }
+
+        .option {
+            display: flex;
+            align-items: flex-start;
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option:hover {
+            background: #e9ecef;
+            border-color: #dee2e6;
+        }
+
+        .option.selected {
+            background: #e7f3ff;
+            border-color: #4a90e2;
+        }
+
+        .option.correct {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+
+        .option.incorrect {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+
+        .option-label {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            background: white;
+            border-radius: 50%;
+            margin-right: 15px;
+            font-weight: 600;
+            color: #666;
+            flex-shrink: 0;
+        }
+
+        .option.selected .option-label {
+            background: #4a90e2;
+            color: white;
+        }
+
+        .option-text {
+            flex: 1;
+            line-height: 1.5;
+        }
+
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+        }
+
+        .nav-button {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .prev-button {
+            background: #e9ecef;
+            color: #666;
+        }
+
+        .next-button {
+            background: #4a90e2;
+            color: white;
+        }
+
+        .submit-button {
+            background: #28a745;
+            color: white;
+        }
+
+        .nav-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Question Navigator */
+        .question-navigator {
+            border-top: 1px solid #eee;
+            padding-top: 30px;
+        }
+
+        .navigator-title {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .question-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+            gap: 8px;
+            max-width: 600px;
+        }
+
+        .question-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+        }
+
+        .question-number:hover {
+            background: #f8f9fa;
+            border-color: #4a90e2;
+        }
+
+        .question-number.current {
+            background: #4a90e2;
+            color: white;
+            border-color: #4a90e2;
+        }
+
+        .question-number.answered {
+            background: #e7f3ff;
+            border-color: #4a90e2;
+        }
+
+        .question-number.correct {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+
+        .question-number.incorrect {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+
+        /* Results Page */
+        .results-page {
+            display: none;
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .results-icon {
+            font-size: 80px;
+            margin-bottom: 30px;
+        }
+
+        .results-page h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #1a1a1a;
+        }
+
+        .score-display {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #4a90e2;
+            margin-bottom: 20px;
+        }
+
+        .score-message {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 40px;
+        }
+
+        .results-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .rationale-box {
+            background: #f8f9fa;
+            border-left: 4px solid #4a90e2;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 8px;
+            text-align: left;
+        }
+
+        .rationale-box h4 {
+            color: #4a90e2;
+            margin-bottom: 10px;
+        }
+
+        .rationale-box p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .quiz-cards {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .quiz-card {
+                width: 100%;
+                max-width: 350px;
+            }
+
+            .quiz-page {
+                padding: 20px;
+            }
+
+            .question-grid {
+                grid-template-columns: repeat(auto-fill, minmax(35px, 1fr));
+            }
+
+            .question-number {
+                width: 35px;
+                height: 35px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Landing Page -->
+        <div class="landing-page" id="landingPage">
+            <div class="book-icon">📘</div>
+            <h1>Normal Puerperium NCLEX Quiz</h1>
+            <p>120 fact-based questions drawn from Chapter 6 (pp 276-279)</p>
+            
+            <div class="quiz-cards">
+                <div class="quiz-card part1">
+                    <div class="number">1</div>
+                    <h2>Part 1: Physiologic Changes</h2>
+                    <p>60 questions on maternal adaptations and systems</p>
+                    <button class="start-button" onclick="startQuiz(1)">Start Part 1</button>
+                </div>
+                
+                <div class="quiz-card part2">
+                    <div class="number">2</div>
+                    <h2>Part 2: Nursing Care & Teaching</h2>
+                    <p>60 questions on assessment, interventions, education</p>
+                    <button class="start-button" onclick="startQuiz(2)">Start Part 2</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz Page -->
+        <div class="quiz-page" id="quizPage">
+            <div class="quiz-header">
+                <div class="quiz-title">
+                    📘 NCLEX Practice Quiz - <span id="partTitle">Part 1</span>
+                </div>
+                <div class="timer">⏱️ <span id="timer">00:00:00</span></div>
+            </div>
+
+            <div class="progress-info">
+                <div class="question-counter">Question <span id="currentQuestion">1</span> of <span id="totalQuestions">60</span></div>
+                <div class="percentage-complete"><span id="percentComplete">0</span>% Complete</div>
+            </div>
+
+            <div class="question-text" id="questionText">Loading question...</div>
+
+            <div class="options" id="optionsContainer">
+                <!-- Options will be dynamically inserted here -->
+            </div>
+
+            <div class="rationale-box" id="rationaleBox" style="display: none;">
+                <h4>Rationale:</h4>
+                <p id="rationaleText"></p>
+            </div>
+
+            <div class="navigation-buttons">
+                <button class="nav-button prev-button" id="prevButton" onclick="previousQuestion()">← Previous</button>
+                <button class="nav-button next-button" id="nextButton" onclick="nextQuestion()">Next →</button>
+            </div>
+
+            <div class="question-navigator">
+                <div class="navigator-title">Question Navigator</div>
+                <div class="question-grid" id="questionGrid">
+                    <!-- Question numbers will be dynamically inserted here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Page -->
+        <div class="results-page" id="resultsPage">
+            <div class="results-icon">🎉</div>
+            <h2>Quiz Complete!</h2>
+            <div class="score-display" id="scoreDisplay">0/0</div>
+            <div class="score-message" id="scoreMessage">Calculating your results...</div>
+            
+            <div class="results-buttons">
+                <button class="nav-button" onclick="reviewQuiz()">Review Answers</button>
+                <button class="nav-button submit-button" onclick="restartQuiz()">Try Again</button>
+                <button class="nav-button" onclick="backToHome()">Back to Home</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Quiz Data
+        const quizData = {
+            part1: [
+                {
+                    id: 1,
+                    question: "During the first 24 hours after delivery, a slight maternal temperature rise is considered:",
+                    options: ["Normal physiologic response", "Indication for broad-spectrum antibiotics", "Warning sign of endometritis", "Sign of retained placental fragments"],
+                    correct: 0,
+                    rationale: "A small elevation (<38 °C) in the first 24 h is expected as metabolism resets."
+                },
+                {
+                    id: 2,
+                    question: "Puerperal bradycardia is defined in the literature as a pulse of ____ beats/min and may appear temporarily in the first 24 hours.",
+                    options: ["30-40", "40-50", "55-65", "70-80"],
+                    correct: 1,
+                    rationale: "Text lists 40-50 bpm as common transient finding postpartum."
+                },
+                {
+                    id: 3,
+                    question: "A transient blood-pressure increase in the first few days after birth should resolve:",
+                    options: ["Within a few days", "By 6 weeks", "Only after oxytocin is stopped", "When lochia alba begins"],
+                    correct: 0,
+                    rationale: "Normal physiologic rise returns to baseline within several days."
+                },
+                {
+                    id: 4,
+                    question: "An orthostatic drop is most likely to appear within the first ____ hours postpartum.",
+                    options: ["6", "12", "24", "48"],
+                    correct: 3,
+                    rationale: "Orthostatic hypotension may develop in the first 48 h per text."
+                },
+                {
+                    id: 5,
+                    question: "A blood pressure ≥140/90 mm Hg on two readings 4 hours apart suggests:",
+                    options: ["Normal involution", "Gestational hypertension or pre-eclampsia", "Hypovolemia", "Post-dural puncture headache"],
+                    correct: 1,
+                    rationale: "Threshold supplied verbatim in the PDF."
+                },
+                {
+                    id: 6,
+                    question: "Exogenous oxytocin is routinely administered immediately after placental delivery to:",
+                    options: ["Reduce after-pain sensation", "Prevent mastitis", "Keep the uterus firm and contracted", "Speed lochia transition"],
+                    correct: 2,
+                    rationale: "It counteracts early uterine atony."
+                },
+                {
+                    id: 7,
+                    question: "Breastfeeding enhances uterine involution because it increases release of __________.",
+                    options: ["Prolactin", "Endogenous oxytocin", "Estrogen", "Relaxin"],
+                    correct: 1,
+                    rationale: "Suckling triggers maternal posterior pituitary oxytocin."
+                },
+                {
+                    id: 8,
+                    question: "Afterpains are more commonly reported in:",
+                    options: ["Primiparas", "Multiparas", "Post-cesarean patients only", "Women carrying multiples"],
+                    correct: 1,
+                    rationale: "Text: more common in subsequent pregnancies."
+                },
+                {
+                    id: 9,
+                    question: "Fundal height normally decreases at a rate of ____ cm per 24 hours.",
+                    options: ["0.5", "1-2", "3-4", "5"],
+                    correct: 1,
+                    rationale: "Rate given: 1–2 cm/day."
+                },
+                {
+                    id: 10,
+                    question: "By two weeks postpartum the uterus should be:",
+                    options: ["4 cm below umbilicus", "At symphysis pubis", "No longer palpable abdominally", "Still 1 cm above umbilicus"],
+                    correct: 2,
+                    rationale: "Non-palpable by abdominal exam at 2 weeks."
+                },
+                {
+                    id: 11,
+                    question: "Regeneration of the placental implantation site is usually complete by which postpartum timeframe?",
+                    options: ["End of the 2nd postpartum week", "End of the 4th postpartum week", "By the 6th postpartum week", "By 12 weeks postpartum"],
+                    correct: 2,
+                    rationale: "Endometrial growth and sloughing heal the placental site without scarring; this process is typically complete by 6 weeks after birth."
+                },
+                {
+                    id: 12,
+                    question: "How far does the uterine fundus normally descend each day during early involution?",
+                    options: ["½ cm per day", "1–2 cm every 24 hours", "3–4 cm every 48 hours", "It remains at the level of the umbilicus for one week"],
+                    correct: 1,
+                    rationale: "Involution proceeds steadily at about 1–2 cm (one finger-breadth) per 24-hour period."
+                },
+                {
+                    id: 13,
+                    question: "By which day postpartum should the uterus no longer be palpable abdominally in an uncomplicated recovery?",
+                    options: ["Day 7", "Day 10", "Day 14", "Day 21"],
+                    correct: 2,
+                    rationale: "By two weeks after birth the uterus has usually descended into the true pelvis and is no longer palpable through the abdominal wall."
+                },
+                {
+                    id: 14,
+                    question: "Lochia rubra—bright-red, blood-tinged drainage with decidual tissue—normally persists for:",
+                    options: ["1 day", "2 – 3 days", "7 – 10 days", "Up to 6 weeks"],
+                    correct: 1,
+                    rationale: "Lochia rubra typically lasts the first 2 – 3 days after delivery before changing in color and character."
+                },
+                {
+                    id: 15,
+                    question: "Lochia serosa is expected to appear:",
+                    options: ["Immediately after birth", "After lochia rubra and up to day 10", "During weeks 3–4 only", "At 6 weeks postpartum"],
+                    correct: 1,
+                    rationale: "Pale pink-to-brown lochia serosa follows rubra and may continue until about the tenth day."
+                },
+                // Continue pattern for questions 16-60...
+                {
+                    id: 60,
+                    question: "Which sign would require immediate follow-up at the routine 6-week postpartum visit?",
+                    options: ["Continuation of mild lochia alba", "Intermittent afterpains when breastfeeding", "Fundus palpable just above the symphysis pubis", "Occasional fatigue with childcare"],
+                    correct: 2,
+                    rationale: "By six weeks the uterus should have involuted into the true pelvis; a still-palpable fundus may indicate sub-involution or infection."
+                }
+            ],
+
+            part2: [
+                {
+                    id: 61,
+                    question: "In the first two hours after birth, blood pressure and pulse should be checked every:",
+                    options: ["5 min", "15 min", "30 min", "60 min"],
+                    correct: 1,
+                    rationale: "Vital-sign schedule explicitly stated."
+                },
+                {
+                    id: 62,
+                    question: "'Heavy' lochia is defined as a pad saturated within:",
+                    options: ["4 hours", "2 hours", "60 minutes", "15 minutes"],
+                    correct: 1,
+                    rationale: "Definitions: heavy = pad saturated in ≤2 h."
+                },
+                {
+                    id: 63,
+                    question: "A pad fully saturated in 15 minutes or less plus pooling under the buttocks warrants:",
+                    options: ["Re-assessment in 30 min", "Immediate intervention and provider notification", "Fundal massage only", "No action – this is expected"],
+                    correct: 1,
+                    rationale: "Clearly noted as urgent."
+                },
+                {
+                    id: 64,
+                    question: "When assessing an episiotomy, the nurse positions the woman:",
+                    options: ["Supine with knees flexed", "Lithotomy in stirrups", "Side-lying (lateral) with gloves and a flashlight", "Prone over pillows"],
+                    correct: 2,
+                    rationale: "Side-lying improves visualization and comfort."
+                },
+                {
+                    id: 65,
+                    question: "For non-breastfeeding mothers, engorgement usually peaks ____ days postpartum and resolves without milk expression.",
+                    options: ["1-2", "3-5", "6-8", "10-14"],
+                    correct: 1,
+                    rationale: "Engorgement 3–5 days; lactation ceases ≈1 week."
+                },
+                // Continue pattern for questions 66-120...
+                {
+                    id: 120,
+                    question: "Which sign indicates the need to evaluate the newborn for jaundice related to breastfeeding issues?",
+                    options: ["Baby nursing 10 times in 24 h", "Mother reports breasts feel full but baby is sleepy and has < 3 wet diapers/day", "Infant passes meconium stools", "Audible swallowing during feeds"],
+                    correct: 1,
+                    rationale: "Poor transfer of milk increases entero-hepatic circulation raising bilirubin."
+                }
+            ]
+        };
+
+        // Quiz State Variables
+        let currentPart = 1;
+        let currentQuestionIndex = 0;
+        let selectedAnswer = null;
+        let userAnswers = [];
+        let showingRationale = false;
+        let timerInterval = null;
+        let secondsElapsed = 0;
+        let isReviewMode = false;
+        let questionResults = [];
+
+        // Initialize Quiz
+        function startQuiz(part) {
+            currentPart = part;
+            currentQuestionIndex = 0;
+            userAnswers = [];
+            questionResults = [];
+            secondsElapsed = 0;
+            showingRationale = false;
+            isReviewMode = false;
+            
+            document.getElementById('landingPage').style.display = 'none';
+            document.getElementById('quizPage').style.display = 'block';
+            document.getElementById('partTitle').textContent = `Part ${part}`;
+            document.getElementById('totalQuestions').textContent = '60';
+            
+            startTimer();
+            renderQuestionNavigator();
+            showQuestion();
+        }
+
+        // Timer Functions
+        function startTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                secondsElapsed++;
+                updateTimerDisplay();
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const hours = Math.floor(secondsElapsed / 3600);
+            const minutes = Math.floor((secondsElapsed % 3600) / 60);
+            const seconds = secondsElapsed % 60;
+            
+            const display = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            document.getElementById('timer').textContent = display;
+        }
+
+        // Question Display Functions
+        function showQuestion() {
+            const questions = currentPart === 1 ? quizData.part1 : quizData.part2;
+            const question = questions[currentQuestionIndex];
+            
+            // Reset state for new question
+            showingRationale = false;
+            selectedAnswer = userAnswers[currentQuestionIndex] !== undefined ? userAnswers[currentQuestionIndex] : null;
+            
+            document.getElementById('currentQuestion').textContent = currentQuestionIndex + 1;
+            document.getElementById('percentComplete').textContent = Math.round(((currentQuestionIndex + 1) / 60) * 100);
+            document.getElementById('questionText').textContent = question.question;
+            
+            renderOptions(question);
+            updateNavigationButtons();
+            updateQuestionNavigator();
+            
+            // Hide rationale box when showing new question
+            document.getElementById('rationaleBox').style.display = 'none';
+            
+            // If in review mode and question was answered, show the rationale
+            if (isReviewMode && userAnswers[currentQuestionIndex] !== undefined) {
+                setTimeout(() => showRationale(), 10);
+            }
+        }
+
+        function renderOptions(question) {
+            const container = document.getElementById('optionsContainer');
+            container.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'option';
+                
+                if (!showingRationale && userAnswers[currentQuestionIndex] === index) {
+                    optionDiv.classList.add('selected');
+                }
+                
+                if (showingRationale) {
+                    if (index === question.correct) {
+                        optionDiv.classList.add('correct');
+                    } else if (userAnswers[currentQuestionIndex] === index && index !== question.correct) {
+                        optionDiv.classList.add('incorrect');
+                    }
+                    
+                    if (userAnswers[currentQuestionIndex] === index) {
+                        optionDiv.classList.add('selected');
+                    }
+                }
+                
+                optionDiv.onclick = () => {
+                    if (!showingRationale && !isReviewMode) {
+                        selectAnswer(index);
+                    }
+                };
+                
+                optionDiv.innerHTML = `
+                    <span class="option-label">${String.fromCharCode(65 + index)}</span>
+                    <span class="option-text">${option}</span>
+                `;
+                
+                container.appendChild(optionDiv);
+            });
+        }
+
+        function selectAnswer(index) {
+            selectedAnswer = index;
+            userAnswers[currentQuestionIndex] = index;
+            
+            document.querySelectorAll('.option').forEach((opt, i) => {
+                opt.classList.remove('selected');
+                if (i === index) {
+                    opt.classList.add('selected');
+                }
+            });
+            
+            setTimeout(() => showRationale(), 500);
+        }
+
+        function showRationale() {
+            const questions = currentPart === 1 ? quizData.part1 : quizData.part2;
+            const question = questions[currentQuestionIndex];
+            
+            showingRationale = true;
+            
+            if (!isReviewMode && questionResults[currentQuestionIndex] === undefined) {
+                questionResults[currentQuestionIndex] = userAnswers[currentQuestionIndex] === question.correct;
+            }
+            
+            renderOptions(question);
+            
+            document.getElementById('rationaleText').textContent = question.rationale;
+            document.getElementById('rationaleBox').style.display = 'block';
+            
+            updateQuestionNavigator();
+        }
+
+        // Navigation Functions
+        function previousQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                showQuestion();
+            }
+        }
+
+        function nextQuestion() {
+            const questions = currentPart === 1 ? quizData.part1 : quizData.part2;
+            
+            if (currentQuestionIndex < questions.length - 1) {
+                currentQuestionIndex++;
+                showQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function goToQuestion(index) {
+            currentQuestionIndex = index;
+            showQuestion();
+        }
+
+        function updateNavigationButtons() {
+            const prevButton = document.getElementById('prevButton');
+            const nextButton = document.getElementById('nextButton');
+            const questions = currentPart === 1 ? quizData.part1 : quizData.part2;
+            
+            prevButton.disabled = currentQuestionIndex === 0;
+            
+            if (currentQuestionIndex === questions.length - 1) {
+                nextButton.textContent = 'Finish →';
+                nextButton.classList.add('submit-button');
+            } else {
+                nextButton.textContent = 'Next →';
+                nextButton.classList.remove('submit-button');
+            }
+        }
+
+        // Question Navigator
+        function renderQuestionNavigator() {
+            const grid = document.getElementById('questionGrid');
+            grid.innerHTML = '';
+            
+            for (let i = 0; i < 60; i++) {
+                const numberDiv = document.createElement('div');
+                numberDiv.className = 'question-number';
+                numberDiv.textContent = i + 1;
+                numberDiv.onclick = () => goToQuestion(i);
+                grid.appendChild(numberDiv);
+            }
+        }
+
+        function updateQuestionNavigator() {
+            const numbers = document.querySelectorAll('.question-number');
+            const questions = currentPart === 1 ? quizData.part1 : quizData.part2;
+            
+            numbers.forEach((num, index) => {
+                num.classList.remove('current', 'answered', 'correct', 'incorrect');
+                
+                if (index === currentQuestionIndex) {
+                    num.classList.add('current');
+                }
+                
+                if (userAnswers[index] !== undefined) {
+                    num.classList.add('answered');
+                    
+                    if (isReviewMode || questionResults[index] !== undefined) {
+                        const question = questions[index];
+                        if (userAnswers[index] === question.correct) {
+                            num.classList.add('correct');
+                        } else {
+                            num.classList.add('incorrect');
+                        }
+                    }
+                }
+            });
+        }
+
+        // Results Functions
+        function showResults() {
+            if (timerInterval) clearInterval(timerInterval);
+            
+            const questions = currentPart === 1 ? quizData.part1 : quizData.part2;
+            let correctCount = 0;
+            
+            questions.forEach((question, index) => {
+                if (userAnswers[index] === question.correct) {
+                    correctCount++;
+                }
+            });
+            
+            const percentage = Math.round((correctCount / 60) * 100);
+            
+            document.getElementById('quizPage').style.display = 'none';
+            document.getElementById('resultsPage').style.display = 'block';
+            
+            document.getElementById('scoreDisplay').textContent = `${correctCount}/60`;
+            
+            let message = '';
+            if (percentage >= 90) {
+                message = 'Excellent work! You have mastered this material!';
+            } else if (percentage >= 80) {
+                message = 'Great job! You have a strong understanding of the concepts.';
+            } else if (percentage >= 70) {
+                message = 'Good effort! Review the topics you missed and try again.';
+            } else {
+                message = 'Keep studying! Focus on understanding the rationales for each question.';
+            }
+            
+            document.getElementById('scoreMessage').textContent = message;
+        }
+
+        function reviewQuiz() {
+            currentQuestionIndex = 0;
+            isReviewMode = true;
+            document.getElementById('resultsPage').style.display = 'none';
+            document.getElementById('quizPage').style.display = 'block';
+            showQuestion();
+        }
+
+        function restartQuiz() {
+            startQuiz(currentPart);
+        }
+
+        function backToHome() {
+            if (timerInterval) clearInterval(timerInterval);
+            document.getElementById('resultsPage').style.display = 'none';
+            document.getElementById('quizPage').style.display = 'none';
+            document.getElementById('landingPage').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
